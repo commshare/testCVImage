@@ -1,8 +1,11 @@
 package sclive.cvimg;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,10 +15,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private String TAG = "Main Activity";
+    private static int RESULT_LOAD_SOURCE = 1;
 
+    Button mBtnLoadPic;
+    Button mBtnAnalysePic;
+    ImageView mSrcImg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +50,22 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
 
+        mBtnLoadPic= (Button)findViewById(R.id.BtnLoadPic);
+        mBtnAnalysePic=(Button)findViewById(R.id.BtnAnalysePic);
+        mSrcImg=(ImageView)findViewById(R.id.SrcImage);
+        setClick();
+    }
+    void setClick(){
+        mBtnLoadPic.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent i =new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i,RESULT_LOAD_SOURCE);
+            }
+        });
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -97,5 +121,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "SRC Image selected .");
+
     }
 }
