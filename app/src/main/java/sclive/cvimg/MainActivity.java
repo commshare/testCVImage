@@ -1,6 +1,9 @@
 package sclive.cvimg;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -126,7 +129,31 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        String srcPath;
+        if(data==null){
+            Log.d("zb","not pick  pic");
+            return ;
+        }
         Log.d(TAG, "SRC Image selected .");
+        Uri selectedImage = data.getData();
+        /*数据库路径字段 这一列的数据存到 字符串数组*/
+        String[] filePathColumn = { MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
 
+        try {
+            cursor.moveToFirst();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        /*找到了，拿到数组下标*/
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        /*根据下标拿到路径*/
+        String picPath = cursor.getString(columnIndex);
+        /*关闭迭代器*/
+        cursor.close();
+        if(requestCode == RESULT_LOAD_SOURCE) {
+            srcPath=picPath;
+            mSrcImg.setImageBitmap(BitmapFactory.decodeFile(srcPath));
+        }
     }
-}
+    }
