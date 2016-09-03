@@ -18,12 +18,19 @@
         <!--android:text="Hello World!" />-->
     <Button
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="Load Picture"
+        android:layout_alignParentLeft="true"
+        android:text="Load Image"
         android:id = "@+id/BtnLoadPic"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         />
+    <TextView
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/TextXY"
+        android:text="坐标"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <ImageView
         android:layout_above="@+id/BtnAnalysePic"
         android:layout_below="@+id/BtnLoadPic"

@@ -1,14 +1,21 @@
 package sclive.cvimg;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,6 +38,7 @@ public class MainActivity extends AppCompatActivity
     Button mBtnLoadPic;
     Button mBtnAnalysePic;
     ImageView mSrcImg;
+    TextView mTextXY;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +67,42 @@ public class MainActivity extends AppCompatActivity
         mBtnLoadPic= (Button)findViewById(R.id.BtnLoadPic);
         mBtnAnalysePic=(Button)findViewById(R.id.BtnAnalysePic);
         mSrcImg=(ImageView)findViewById(R.id.SrcImage);
+        mSrcImg.setBackgroundColor(Color.parseColor("#ff0000"));
+        mTextXY=(TextView)findViewById(R.id.TextXY);
         setClick();
+        /*
+        * refer to http://stackoverflow.com/questions/33030933/android-6-0-open-failed-eacces-permission-denied
+        * should ask for permission after Android 6
+        * */
+        if(shouldAskPermission()){
+            verifyStoragePermissions(this);
+        }else
+            Log.d(TAG,"should not ask for permission");
+    }
+    private boolean shouldAskPermission(){
+        return(Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP_MR1);
+    }
+    // Storage Permissions variables
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    //persmission method.
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have read or write permission
+        int writePermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int readPermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        if (writePermission != PackageManager.PERMISSION_GRANTED || readPermission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
     void setClick(){
         mBtnLoadPic.setOnClickListener(new View.OnClickListener(){
@@ -74,6 +118,42 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this,ImageProcActivity.class);
                 startActivity(i);
+            }
+        });
+        mSrcImg.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                int action = motionEvent.getAction();
+                int x = (int)motionEvent.getX();
+                int y=(int)motionEvent.getY();
+                switch (action){
+                    /*
+                    *
+    public static final int ACTION_BUTTON_PRESS = 11;
+    public static final int ACTION_BUTTON_RELEASE = 12;
+    public static final int ACTION_CANCEL = 3;
+    public static final int ACTION_DOWN = 0;
+    public static final int ACTION_HOVER_ENTER = 9;
+    public static final int ACTION_HOVER_EXIT = 10;
+    public static final int ACTION_HOVER_MOVE = 7;
+    public static final int ACTION_MASK = 255;
+    public static final int ACTION_MOVE = 2;  //经常有
+        public static final int ACTION_UP = 1;  //经常有
+    public static final int ACTION_OUTSIDE = 4;*/
+                    case MotionEvent.ACTION_DOWN:
+                        Log.d(TAG,"DOWN");
+                        mTextXY.setText("DOWN" + x + " : " + y);
+                        break;
+                    default:
+                        Log.d(TAG,"event:"+action);
+                        break;
+                }
+     /*
+     * Return 'true' to indicate that the event have been consumed.
+     * If auto-generated 'false', your code can detect ACTION_DOWN only,
+     * cannot detect ACTION_MOVE and ACTION_UP.
+     */
+                return true;
             }
         });
     }
