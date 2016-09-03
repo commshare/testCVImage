@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private String TAG = "Main Activity";
     private static int RESULT_LOAD_SOURCE = 1;
+    //String SC_INTENT_ANALYSE =""
 
     Button mBtnLoadPic;
     Button mBtnAnalysePic;
@@ -66,6 +67,13 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent i =new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i,RESULT_LOAD_SOURCE);
+            }
+        });
+        mBtnAnalysePic.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this,ImageProcActivity.class);
+                startActivity(i);
             }
         });
     }
@@ -153,6 +161,7 @@ public class MainActivity extends AppCompatActivity
         cursor.close();
         if(requestCode == RESULT_LOAD_SOURCE) {
             srcPath=picPath;
+            /*TODO 加一个判断或者异常，如果路径不对，等原因导致set失败*/
             mSrcImg.setImageBitmap(BitmapFactory.decodeFile(srcPath));
         }
     }
