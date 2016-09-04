@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     Button mBtnAnalysePic;
     ImageView mSrcImg;
     TextView mTextXY;
+    SCImage curImg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity
         mBtnLoadPic= (Button)findViewById(R.id.BtnLoadPic);
         mBtnAnalysePic=(Button)findViewById(R.id.BtnAnalysePic);
         mSrcImg=(ImageView)findViewById(R.id.SrcImage);
+        /*设置背景色为红色，为了方便确定图片是怎么缩放的，以及控件的大小*/
         mSrcImg.setBackgroundColor(Color.parseColor("#ff0000"));
         mTextXY=(TextView)findViewById(R.id.TextXY);
         setClick();
@@ -127,22 +130,13 @@ public class MainActivity extends AppCompatActivity
                 int x = (int)motionEvent.getX();
                 int y=(int)motionEvent.getY();
                 switch (action){
-                    /*
-                    *
-    public static final int ACTION_BUTTON_PRESS = 11;
-    public static final int ACTION_BUTTON_RELEASE = 12;
-    public static final int ACTION_CANCEL = 3;
-    public static final int ACTION_DOWN = 0;
-    public static final int ACTION_HOVER_ENTER = 9;
-    public static final int ACTION_HOVER_EXIT = 10;
-    public static final int ACTION_HOVER_MOVE = 7;
-    public static final int ACTION_MASK = 255;
-    public static final int ACTION_MOVE = 2;  //经常有
-        public static final int ACTION_UP = 1;  //经常有
-    public static final int ACTION_OUTSIDE = 4;*/
                     case MotionEvent.ACTION_DOWN:
                         Log.d(TAG,"DOWN");
-                        mTextXY.setText("DOWN" + x + " : " + y);
+                        mTextXY.setText("DOWN " + x + " : " + y);
+                        break;
+                    case MotionEvent.ACTION_MOVE://(移动)
+                        break;
+                    case MotionEvent.ACTION_UP://(抬起)
                         break;
                     default:
                         Log.d(TAG,"event:"+action);
@@ -157,6 +151,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -242,7 +237,13 @@ public class MainActivity extends AppCompatActivity
         if(requestCode == RESULT_LOAD_SOURCE) {
             srcPath=picPath;
             /*TODO 加一个判断或者异常，如果路径不对，等原因导致set失败*/
-            mSrcImg.setImageBitmap(BitmapFactory.decodeFile(srcPath));
+             curImg= new SCImage(srcPath);
+            Bitmap curBmp=curImg.getB();//BitmapFactory.decodeFile(srcPath);
+            if(curBmp!=null) {
+                mSrcImg.setImageBitmap(curBmp);
+                mTextXY.setText("W "+curImg.getW()+" H "+curImg.getH());
+            }else
+                mTextXY.setText("load image error ");
         }
     }
     }
