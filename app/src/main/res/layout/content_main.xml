@@ -37,7 +37,7 @@
         android:layout_below="@+id/BtnLoadPic"
         android:id="@+id/SrcImage"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:scaleType="matrix"
         />
     <Button

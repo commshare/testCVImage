@@ -133,6 +133,9 @@ public class MainActivity extends AppCompatActivity
                     case MotionEvent.ACTION_DOWN:
                         Log.d(TAG,"DOWN");
                         mTextXY.setText("DOWN " + x + " : " + y);
+                        int width=mSrcImg.getWidth();
+                        Bitmap t=curImg.Scale(width);
+                        mSrcImg.setImageBitmap(t);
                         break;
                     case MotionEvent.ACTION_MOVE://(移动)
                         break;
@@ -241,7 +244,11 @@ public class MainActivity extends AppCompatActivity
             Bitmap curBmp=curImg.getB();//BitmapFactory.decodeFile(srcPath);
             if(curBmp!=null) {
                 mSrcImg.setImageBitmap(curBmp);
-                mTextXY.setText("W "+curImg.getW()+" H "+curImg.getH());
+                int w=mSrcImg.getWidth(); //984
+                int h=mSrcImg.getHeight();//1293
+
+                mTextXY.setText("W "+curImg.getW()+" H "+curImg.getH() +" view["+w+"*"+h+"]");
+
             }else
                 mTextXY.setText("load image error ");
         }
