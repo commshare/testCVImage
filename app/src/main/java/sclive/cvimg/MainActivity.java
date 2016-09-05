@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,6 +42,15 @@ public class MainActivity extends AppCompatActivity
     ImageView mSrcImg;
     TextView mTextXY;
     SCImage curImg;
+    private Drawable mDrawable;
+    /**
+     * 图片宽度（使用前判断mDrawable是否null）
+     */
+    int mDrawableWidth;
+    /**
+     * 图片高度（使用前判断mDrawable是否null）
+     */
+    int mDrawableHeight;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,9 +79,23 @@ public class MainActivity extends AppCompatActivity
         mBtnLoadPic= (Button)findViewById(R.id.BtnLoadPic);
         mBtnAnalysePic=(Button)findViewById(R.id.BtnAnalysePic);
         mSrcImg=(ImageView)findViewById(R.id.SrcImage);
+        mTextXY=(TextView)findViewById(R.id.TextXY);
         /*设置背景色为红色，为了方便确定图片是怎么缩放的，以及控件的大小*/
         mSrcImg.setBackgroundColor(Color.parseColor("#ff0000"));
-        mTextXY=(TextView)findViewById(R.id.TextXY);
+        /**
+         * 拿到src的图片
+         */
+          mDrawable=mSrcImg.getBackground();
+
+        if (mDrawable == null)
+            return;
+        mDrawableWidth = mDrawable.getIntrinsicWidth();
+        mDrawableHeight = mDrawable.getIntrinsicHeight();
+        /*
+        * Activity: mDrawableWidth[-1] mDrawableHeight[-1] mSrcImg.getWidth()[0] mSrcImg.getHeight[0]
+        * */
+        Log.d(TAG,"`1 mDrawableWidth["+mDrawableWidth+"] mDrawableHeight["+mDrawableHeight+"] mSrcImg.getWidth()["+mSrcImg.getWidth()+"] mSrcImg.getHeight["+mSrcImg.getHeight()+"]");
+
         setClick();
         /*
         * refer to http://stackoverflow.com/questions/33030933/android-6-0-open-failed-eacces-permission-denied
@@ -123,6 +147,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(i);
             }
         });
+        Log.d(TAG,"2 mDrawableWidth["+mDrawableWidth+"] mDrawableHeight["+mDrawableHeight+"] mSrcImg.getWidth()["+mSrcImg.getWidth()+"] mSrcImg.getHeight["+mSrcImg.getHeight()+"]");
+
         mSrcImg.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -244,6 +270,8 @@ public class MainActivity extends AppCompatActivity
             Bitmap curBmp=curImg.getB();//BitmapFactory.decodeFile(srcPath);
             if(curBmp!=null) {
                 mSrcImg.setImageBitmap(curBmp);
+                Log.d(TAG,"3 mDrawableWidth["+mDrawableWidth+"] mDrawableHeight["+mDrawableHeight+"] mSrcImg.getWidth()["+mSrcImg.getWidth()+"] mSrcImg.getHeight["+mSrcImg.getHeight()+"]");
+
                 int w=mSrcImg.getWidth(); //984
                 int h=mSrcImg.getHeight();//1293
 
