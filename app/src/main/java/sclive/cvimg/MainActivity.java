@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity
 
     Button mBtnLoadPic;
     Button mBtnAnalysePic;
-    ImageView mSrcImg;
+//    ImageView mSrcImg;
+    MyImageView mSrcImg;
     TextView mTextXY;
     SCImage curImg;
     private Drawable mDrawable;
@@ -78,7 +79,8 @@ public class MainActivity extends AppCompatActivity
 
         mBtnLoadPic= (Button)findViewById(R.id.BtnLoadPic);
         mBtnAnalysePic=(Button)findViewById(R.id.BtnAnalysePic);
-        mSrcImg=(ImageView)findViewById(R.id.SrcImage);
+//        mSrcImg=(ImageView)findViewById(R.id.SrcImage);
+        mSrcImg=(MyImageView)findViewById(R.id.SrcImage);
         mTextXY=(TextView)findViewById(R.id.TextXY);
         /*设置背景色为红色，为了方便确定图片是怎么缩放的，以及控件的大小*/
         mSrcImg.setBackgroundColor(Color.parseColor("#ff0000"));
@@ -149,36 +151,37 @@ public class MainActivity extends AppCompatActivity
         });
         Log.d(TAG,"2 mDrawableWidth["+mDrawableWidth+"] mDrawableHeight["+mDrawableHeight+"] mSrcImg.getWidth()["+mSrcImg.getWidth()+"] mSrcImg.getHeight["+mSrcImg.getHeight()+"]");
 
-        mSrcImg.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                int action = motionEvent.getAction();
-                int x = (int)motionEvent.getX();
-                int y=(int)motionEvent.getY();
-                switch (action){
-                    case MotionEvent.ACTION_DOWN:
-                        Log.d(TAG,"DOWN");
-                        mTextXY.setText("DOWN " + x + " : " + y);
-                        int width=mSrcImg.getWidth();
-                        Bitmap t=curImg.Scale(width);
-                        mSrcImg.setImageBitmap(t);
-                        break;
-                    case MotionEvent.ACTION_MOVE://(移动)
-                        break;
-                    case MotionEvent.ACTION_UP://(抬起)
-                        break;
-                    default:
-                        Log.d(TAG,"event:"+action);
-                        break;
-                }
-     /*
-     * Return 'true' to indicate that the event have been consumed.
-     * If auto-generated 'false', your code can detect ACTION_DOWN only,
-     * cannot detect ACTION_MOVE and ACTION_UP.
-     */
-                return true;
-            }
-        });
+//        mSrcImg.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                int action = motionEvent.getAction();
+//                int x = (int)motionEvent.getX();
+//                int y=(int)motionEvent.getY();
+//                switch (action){
+//                    case MotionEvent.ACTION_DOWN:
+//                        Log.d(TAG,"DOWN");
+//                        mTextXY.setText("DOWN " + x + " : " + y);
+//                        int width=mSrcImg.getWidth();
+//                        Bitmap t=curImg.Scale(width);
+//                        mSrcImg.setImageBitmap(t);
+//                        break;
+//                    case MotionEvent.ACTION_MOVE://(移动)
+//                        break;
+//                    case MotionEvent.ACTION_UP://(抬起)
+//                        break;
+//                    default:
+//                        Log.d(TAG,"event:"+action);
+//                        break;
+//                }
+//     /*
+//     * Return 'true' to indicate that the event have been consumed.
+//     * If auto-generated 'false', your code can detect ACTION_DOWN only,
+//     * cannot detect ACTION_MOVE and ACTION_UP.
+//     */
+//                return true;
+//            }
+//        });
+
     }
 
     @Override
@@ -269,13 +272,21 @@ public class MainActivity extends AppCompatActivity
              curImg= new SCImage(srcPath);
             Bitmap curBmp=curImg.getB();//BitmapFactory.decodeFile(srcPath);
             if(curBmp!=null) {
-                mSrcImg.setImageBitmap(curBmp);
+/*                mSrcImg.setImageBitmap(curBmp);
                 Log.d(TAG,"3 mDrawableWidth["+mDrawableWidth+"] mDrawableHeight["+mDrawableHeight+"] mSrcImg.getWidth()["+mSrcImg.getWidth()+"] mSrcImg.getHeight["+mSrcImg.getHeight()+"]");
 
                 int w=mSrcImg.getWidth(); //984
                 int h=mSrcImg.getHeight();//1293
 
-                mTextXY.setText("W "+curImg.getW()+" H "+curImg.getH() +" view["+w+"*"+h+"]");
+                mTextXY.setText("W "+curImg.getW()+" H "+curImg.
+                getH() +" view["+w+"*"+h+"]");*/
+
+                int w=curImg.getW();
+                int h=curImg.getH();
+                Log.d("zb","src bitmap w "+w+"h "+h);
+                mSrcImg.MyInit(w,h);
+                mSrcImg.setImageBitmap(curBmp);
+
 
             }else
                 mTextXY.setText("load image error ");

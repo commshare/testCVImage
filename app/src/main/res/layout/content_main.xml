@@ -32,12 +32,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <!--　ScaleType.FIT_CENTER：ImageView的默认状态，大图等比例缩小，使整幅图能够居中显示在ImageView中，小图等比例放大，同样要整体居中显示在ImageView中。-->
-    <ImageView
+    <!--<ImageView-->
+        <!--android:layout_above="@+id/BtnAnalysePic"-->
+        <!--android:layout_below="@+id/BtnLoadPic"-->
+        <!--android:id="@+id/SrcImage"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:scaleType="matrix"-->
+        <!--/>-->
+    <sclive.cvimg.MyImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/BtnAnalysePic"
         android:layout_below="@+id/BtnLoadPic"
         android:id="@+id/SrcImage"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
         android:scaleType="matrix"
         />
     <Button
