@@ -1,3 +1,5 @@
+openCVLibrary310/build/
+
 *.iml
 .gradle
 /local.properties
